@@ -50,6 +50,7 @@ function multipleResults(html) {
 
 
 async function dataFromReliableParts(search) {
+
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     const url = "https://www.reliableparts.ca/search?q=" + search;
@@ -61,5 +62,4 @@ async function dataFromReliableParts(search) {
 
 //getData("5304513033");
 
-
-
+module.exports.dataFromReliableParts = dataFromReliableParts;

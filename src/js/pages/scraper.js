@@ -1,5 +1,12 @@
-//const { dataFromReliableParts } = require("../utils/ReliableParts/reliableParts_Parts");
+const { dataFromReliableParts } = require('../utils/ReliableParts/reliableParts_Parts')
 
-import dataFromReliableParts from "../utils/ReliableParts/reliableParts_Parts";
+function tt() {
 
-dataFromReliableParts("4304513033");
+    return (
+        <p>{dataFromReliableParts("5304513033")}</p>
+    );
+    //console.log(dataFromReliableParts("5304513033"))
+}
+
+export default tt
+

@@ -1,12 +1,28 @@
 import './App.css';
-import scraper from './js/pages/scraper'
+import React, { Suspense } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from 'react-router-dom';
+import Scraper from './js/pages/scraper';
+
+import { DatePicker } from 'antd';
+import 'antd/dist/antd.css';
+
 
 function App() {
   return (
+
     <div className="App">
       <header className="App-header">
-        <p>TEst 4</p>
-        {<scraper />}
+        <Suspense fallback={(<div>Loading...</div>)}>
+          <Router>
+            <Routes>
+              <Route exact path="/api" element={<Scraper />} />
+            </Routes>
+          </Router>
+        </Suspense>
       </header>
     </div>
   );

@@ -1,36 +1,6 @@
-const puppeteer = require("puppeteer");
-const cheerio = require("cheerio");
+import axios from 'axios';
+import cheerio from 'cheerio';
 const Product = require("../../models/Product");
-
-
-function processData(data) {
-    console.log("Processing Data...");
-    const $ = cheerio.load(data);
-    const products = [];
-
-    // From this point, the codes would be for one specific result (search by product number )
-
-    let productTitle = $("[id^=mainHeading]").text();
-    const retailPrice = $("[class^=product-details-price]").text().slice(1);
-    let partsNumber = $("[class^=partNumber]").text();
-    const imageLink = $("[data-zoom-id^=productGallery]").prop("href");
-    partsNumber = partsNumber.slice(8);
-    productTitle = productTitle.substr(productTitle.indexOf(" ") + 1);
-    const currentUrl = $("[rel^=canonical]").prop("href");
-
-    const result = new Product(productTitle, partsNumber, retailPrice, currentUrl, imageLink, "");
-
-    if (partsNumber) {
-        products.push(result);
-        console.log("Complete");
-    }
-    else {
-        console.log("Can't find a related product or parts");
-        console.log(multipleResults($));
-    }
-
-    return products;
-}
 
 function multipleResults(html) {
     const results = [];
@@ -49,17 +19,37 @@ function multipleResults(html) {
 }
 
 
-async function dataFromReliableParts(search) {
+async function dataFromReliableParts(url) {
+    //exports.dataFromReliableParts = async url => {
+    try {
+        const { data } = await axios.get(url);
+        const $ = cheerio.load(data);
+        const Products = [];
 
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    const url = "https://www.reliableparts.ca/search?q=" + search;
-    await page.goto(url);
-    const data = await page.content();
-    await browser.close();
-    processData(data);
+        let productTitle = $("[id^=mainHeading]").text();
+        const retailPrice = $("[class^=product-details-price]").text().slice(1);
+        let partsNumber = $("[class^=partNumber]").text();
+        const imageLink = $("[data-zoom-id^=productGallery]").prop("href");
+        partsNumber = partsNumber.slice(8);
+        productTitle = productTitle.substr(productTitle.indexOf(" ") + 1);
+        const currentUrl = $("[rel^=canonical]").prop("href");
+
+        if (partsNumber) {
+
+            const result = new Product(productTitle, partsNumber, retailPrice, currentUrl, imageLink, "");
+
+            Products.push(result);
+            console.log(Products);
+
+        } else {
+            Products.push(multipleResults($))
+            console.log(Products);
+        }
+        return (Products);
+
+    } catch (err) {
+        console.error(err);
+    }
 }
 
-//getData("5304513033");
-
-module.exports.dataFromReliableParts = dataFromReliableParts;
+export default dataFromReliableParts 

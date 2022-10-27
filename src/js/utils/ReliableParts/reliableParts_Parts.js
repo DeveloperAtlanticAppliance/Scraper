@@ -24,7 +24,7 @@ async function dataFromReliableParts(url) {
     try {
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
-        const Products = [];
+        let Products = [];
 
         let productTitle = $("[id^=mainHeading]").text();
         const retailPrice = $("[class^=product-details-price]").text().slice(1);
@@ -42,7 +42,7 @@ async function dataFromReliableParts(url) {
             console.log(Products);
 
         } else {
-            Products.push(multipleResults($))
+            Products = (multipleResults($))
             console.log(Products);
         }
         return (Products);

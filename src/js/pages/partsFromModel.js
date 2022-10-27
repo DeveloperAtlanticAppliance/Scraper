@@ -3,34 +3,34 @@ import dataFromReliableParts from "../utils/ReliableParts/reliableParts_Parts";
 import relatedModelEasyParts from '../utils/EasyApplianceParts/easyParts_Parts';
 import { List } from 'antd';
 
-function Scraper() {
+function ModelScraper() {
 
     let results = [];
     let models = [];
 
-    const [Input, setInput] = useState("5304513033");
-    const [Products, setProducts] = useState([]);
-    const [Models, setModels] = useState([]);
+    const [ModelInput, setModelInput] = useState("5304513033");
+    const [PartsProducts, setPartsProducts] = useState([]);
+    const [ModelsProducts, setModelsProducts] = useState([]);
     async function getData(input) {
         results = await dataFromReliableParts("https://www.reliableparts.ca/search?q=" + input);
-        setProducts(results);
+        setPartsProducts(results);
     }
 
     async function getModels(input) {
         models = await relatedModelEasyParts("https://www.easyapplianceparts.ca/PartInfo.aspx?inventory=12365300&SourceCode=3&SearchTerm=" + input);
         console.log("model: ", models)
-        setModels(models);
+        setModelsProducts(models);
     }
 
     const inputHandler = (e) => {
-        setInput(e.currentTarget.value);
+        setModelInput(e.currentTarget.value);
     }
     const onClickHandler = (e) => {
-        getData(Input);
-        getModels(Input);
+        getData(ModelInput);
+        getModels(ModelInput);
     }
     const onResetHandler = (e) => {
-        setInput("");
+        setModelInput("");
     }
     const description = (url, price, parts) => {
         return `Parts Number: ${parts}  ||  Price: ${price}  ||  Url: ${url}`
@@ -42,8 +42,8 @@ function Scraper() {
     return (
         <div>
             <form>
-                <label>Parts Number: </label>
-                <input type="text" style={{ marginRight: "10px" }} id="inputs" name='partsNumber' value={Input} onChange={inputHandler} />
+                <label>Model Number: </label>
+                <input type="text" style={{ marginRight: "10px" }} id="inputs" name='partsNumber' value={ModelInput} onChange={inputHandler} />
                 <input type="button" style={{ marginRight: "5px" }} onClick={onClickHandler} value="Search" />
                 <input type="button" onClick={onResetHandler} value="Reset" />
             </form>
@@ -56,10 +56,10 @@ function Scraper() {
                     },
                     pageSize: 3,
                 }}
-                dataSource={Products}
+                dataSource={PartsProducts}
                 footer={
                     <div>
-                        Scraping Data with <b>{Input}</b>
+                        Scraping Data with <b>{ModelInput}</b>
                     </div>
                 }
                 renderItem={item => (
@@ -83,10 +83,10 @@ function Scraper() {
                     </List.Item>
                 )}
             />
-            <h2>Related Models</h2>
+            <h2>Parts in this Model</h2>
             <List
                 itemLayout="horizontal"
-                dataSource={Models}
+                dataSource={ModelsProducts}
                 renderItem={item => (
                     <List.Item>
                         <List.Item.Meta
@@ -100,7 +100,7 @@ function Scraper() {
     )
 }
 
-export default Scraper
+export default ModelScraper
 
 
 

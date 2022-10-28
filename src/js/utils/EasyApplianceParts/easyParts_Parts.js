@@ -25,11 +25,6 @@ async function relatedModelEasyParts(url) {
                     brand: brands,
                     number: numbers,
                     description: descriptions
-                    /*
-                        brand = ($("[class^=model-cross-reference__list-content__model-row__brand]", this).text());
-                        number = ($("[class^=model-cross-reference__list-content__model-row__model]", this).text());
-                        description = ($("[class^=model-cross-reference__list-content__model-row__desc]", this).text());
-                    */
                 });
             }
             result = results.slice(2);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import dataFromReliableParts from "../utils/ReliableParts/reliableParts_Parts";
 import relatedModelEasyParts from '../utils/EasyApplianceParts/easyParts_Parts';
 import { List } from 'antd';
+import dataFromReliableParts2 from '../utils/EasyApplianceParts/easyParts_Model';
 
 function ModelScraper() {
 
@@ -12,7 +13,8 @@ function ModelScraper() {
     const [PartsProducts, setPartsProducts] = useState([]);
     const [ModelsProducts, setModelsProducts] = useState([]);
     async function getData(input) {
-        results = await dataFromReliableParts("https://www.reliableparts.ca/search?q=" + input);
+        //results = await dataFromReliableParts("https://www.reliableparts.ca/search?q=" + input);
+        results = await dataFromReliableParts2(input);
         setPartsProducts(results);
     }
 

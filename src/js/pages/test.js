@@ -1,4 +1,5 @@
 import React from 'react';
+import { Puppeteer } from 'puppeteer';
 
 const test = () => {
     return (

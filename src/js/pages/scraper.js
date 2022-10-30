@@ -12,12 +12,14 @@ function Scraper() {
     const [Products, setProducts] = useState([]);
     const [Models, setModels] = useState([]);
     async function getData(input) {
-        results = await dataFromReliableParts("https://www.reliableparts.ca/search?q=" + input);
+        //results = await dataFromReliableParts("https://www.reliableparts.ca/search?q=" + input);
+        results = await dataFromReliableParts(`https://cors-anywhere.herokuapp.com/https://www.reliableparts.ca/search?q=${input}`);
         setProducts(results);
     }
 
     async function getModels(input) {
-        models = await relatedModelEasyParts("https://www.easyapplianceparts.ca/PartInfo.aspx?inventory=12365300&SourceCode=3&SearchTerm=" + input);
+        //models = await relatedModelEasyParts("https://www.easyapplianceparts.ca/PartInfo.aspx?inventory=12365300&SourceCode=3&SearchTerm=" + input);
+        models = await relatedModelEasyParts(`https://cors-anywhere.herokuapp.com/https://www.easyapplianceparts.ca/PartInfo.aspx?inventory=12365300&SourceCode=3&SearchTerm=${input}`);
         console.log("model: ", models)
         setModels(models);
     }

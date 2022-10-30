@@ -1,6 +1,7 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 const Product = require("../../models/Product");
+//const httpProxy = require('http-proxy');
 
 function multipleResults(html) {
     const results = [];
@@ -22,7 +23,10 @@ function multipleResults(html) {
 async function dataFromReliableParts(url) {
     //exports.dataFromReliableParts = async url => {
     try {
+        //const PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
+        //url = `https://cors-anywhere.herokuapp.com${url}`;
         const { data } = await axios.get(url);
+
         const $ = cheerio.load(data);
         let Products = [];
 

@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-//import dataFromReliableParts from "../utils/ReliableParts/reliableParts_Parts";
 import relatedPartsEasyParts from '../utils/EasyApplianceParts/easyParts_Model';
-import { List } from 'antd';
-//import dataFromReliableParts2 from '../utils/EasyApplianceParts/easyParts_Model';
+import { List, Pagination } from 'antd';
 
 function ModelScraper() {
 
-    let parts = [];
+    let parts, data = [];
 
     const [ModelInput, setModelInput] = useState("");
     const [PartsProducts, setPartsProducts] = useState([]);
+    const [PageNumbers, setPageNumbers] = useState(1);
 
     // https://www.easyapplianceparts.ca/KenmoreModels.aspx?ModelNum=${input}&Page=${pageNumber}#PageContent_PagerTop
     async function getParts(input, pageNumber) {
         //let pageNumber = 1;
-        parts = await relatedPartsEasyParts(`https://cors-anywhere.herokuapp.com/https://www.easyapplianceparts.ca/KenmoreModels.aspx?ModelNum=${input}&Page=${pageNumber}#PageContent_PagerTop`);
+        data = await relatedPartsEasyParts(`https://cors-anywhere.herokuapp.com/https://www.easyapplianceparts.ca/KenmoreModels.aspx?ModelNum=${input}&Page=${pageNumber}#PageContent_PagerTop`);
+        parts = data.results;
+        setPageNumbers(data.maxPage);
         console.log("parts: ", parts)
         setPartsProducts(parts);
     }
@@ -24,7 +25,7 @@ function ModelScraper() {
     }
     const onClickHandler = (e) => {
         //getData(ModelInput);
-        getParts(ModelInput, 1);
+        getParts(ModelInput, PageNumbers);
     }
     const onResetHandler = (e) => {
         setModelInput("");
@@ -47,16 +48,9 @@ function ModelScraper() {
             <List
                 itemLayout="vertical"
                 size="large"
-                pagination={{
-                    onChange: page => {
-                        console.log(page);
-                    },
-                    pageSize: 15,
-                }}
                 dataSource={PartsProducts}
                 footer={
                     <div>
-                        {/* Here, Page selection should be located!! */}
                         Scraping Data with <b>{ModelInput}</b>
                     </div>
                 }

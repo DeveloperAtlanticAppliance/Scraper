@@ -19,7 +19,8 @@ function Scraper() {
 
     async function getModels(input) {
         //models = await relatedModelEasyParts("https://www.easyapplianceparts.ca/PartInfo.aspx?inventory=12365300&SourceCode=3&SearchTerm=" + input);
-        models = await relatedModelEasyParts(`https://cors-anywhere.herokuapp.com/https://www.easyapplianceparts.ca/PartInfo.aspx?inventory=12365300&SourceCode=3&SearchTerm=${input}`);
+        // https://www.easyapplianceparts.ca/Search.ashx?SearchTerm=${input}&SearchMethod=standard
+        models = await relatedModelEasyParts(`https://cors-anywhere.herokuapp.com/https://www.easyapplianceparts.ca/Search.ashx?SearchTerm=${input}&SearchMethod=standard`);
         console.log("model: ", models)
         setModels(models);
     }

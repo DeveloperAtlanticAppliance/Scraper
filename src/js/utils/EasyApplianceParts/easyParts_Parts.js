@@ -20,11 +20,13 @@ async function relatedModelEasyParts(url) {
             numbers = ($("[class^=model-cross-reference__list-content__model-row__model]", this).html());
             descriptions = ($("[class^=model-cross-reference__list-content__model-row__desc]", this).html());
 
+
             if (brands) {
                 results.push({
                     brand: brands,
                     number: numbers,
-                    description: descriptions
+                    description: descriptions,
+                    link: `https://www.easyapplianceparts.ca/KenmoreModels.aspx?ModelNum=${numbers}`
                 });
             }
             result = results.slice(2);

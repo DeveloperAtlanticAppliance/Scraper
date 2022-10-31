@@ -8,7 +8,7 @@ function Scraper() {
     let results = [];
     let models = [];
 
-    const [Input, setInput] = useState("5304513033");
+    const [Input, setInput] = useState("");
     const [Products, setProducts] = useState([]);
     const [Models, setModels] = useState([]);
     async function getData(input) {
@@ -78,10 +78,10 @@ function Scraper() {
                         }
                     >
                         <List.Item.Meta
-                            title={<a href={item.sourceLink}>{item.name}</a>}
+                            title={<a href={item.url}>{item.name}</a>}
                             description={description(item.url, item.price, item.number)}
                         />
-                        {item.related}
+                        {item.content}
                     </List.Item>
                 )}
             />
@@ -92,7 +92,7 @@ function Scraper() {
                 renderItem={item => (
                     <List.Item>
                         <List.Item.Meta
-                            title={<a href="https://ant.design">{item.number}</a>}
+                            title={<a href={item.link}>{item.number}</a>}
                             description={desc(item.brand, item.description)}
                         />
                     </List.Item>

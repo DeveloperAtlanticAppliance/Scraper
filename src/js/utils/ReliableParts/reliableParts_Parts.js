@@ -1,7 +1,6 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 const Product = require("../../models/Product");
-//const httpProxy = require('http-proxy');
 
 function multipleResults(html) {
     const results = [];
@@ -13,7 +12,6 @@ function multipleResults(html) {
             price: (html("[class^=product-price]", this).text().match(/\d+(,\d{3})*(\.\d{1,2})?/)[0]),
             url: (html("[class^=productName]", this).prop("href")),
             image: (html("[class^=product-image]", this).html().match(/url.*200/)[0].slice(4)),
-            related: ''
         });
     });
     return results;
@@ -37,10 +35,11 @@ async function dataFromReliableParts(url) {
         partsNumber = partsNumber.slice(8);
         productTitle = productTitle.substr(productTitle.indexOf(" ") + 1);
         const currentUrl = $("[rel^=canonical]").prop("href");
+        const content = $("p[class='content']").text().split(/\r?\n/)[0].slice(19);
 
         if (partsNumber) {
 
-            const result = new Product(productTitle, partsNumber, retailPrice, currentUrl, imageLink, "");
+            const result = new Product(productTitle, partsNumber, retailPrice, currentUrl, imageLink, content);
 
             Products.push(result);
             console.log(Products);

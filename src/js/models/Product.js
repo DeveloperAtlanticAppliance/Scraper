@@ -1,8 +1,8 @@
-module.exports = function (name, number, price, url, image, related) {
+module.exports = function (name, number, price, url, image, content) {
     this.name = name;
     this.number = number;
     this.price = price;
     this.url = url;
     this.image = image;
-    this.related = related;
+    this.content = content;
 }

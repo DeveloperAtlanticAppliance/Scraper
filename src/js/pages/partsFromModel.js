@@ -1,44 +1,36 @@
 import React, { useState } from 'react';
-import dataFromReliableParts from "../utils/ReliableParts/reliableParts_Parts";
-import relatedModelEasyParts from '../utils/EasyApplianceParts/easyParts_Parts';
+//import dataFromReliableParts from "../utils/ReliableParts/reliableParts_Parts";
+import relatedPartsEasyParts from '../utils/EasyApplianceParts/easyParts_Model';
 import { List } from 'antd';
 //import dataFromReliableParts2 from '../utils/EasyApplianceParts/easyParts_Model';
 
 function ModelScraper() {
 
-    let results = [];
-    let models = [];
+    let parts = [];
 
-    const [ModelInput, setModelInput] = useState("5304513033");
+    const [ModelInput, setModelInput] = useState("");
     const [PartsProducts, setPartsProducts] = useState([]);
-    const [ModelsProducts, setModelsProducts] = useState([]);
-    async function getData(input) {
-        results = await dataFromReliableParts("https://www.reliableparts.ca/search?q=" + input);
-        //results = await dataFromReliableParts2(input);
-        setPartsProducts(results);
-    }
 
-    async function getModels(input) {
-        models = await relatedModelEasyParts("https://www.easyapplianceparts.ca/PartInfo.aspx?inventory=12365300&SourceCode=3&SearchTerm=" + input);
-        console.log("model: ", models)
-        setModelsProducts(models);
+    // https://www.easyapplianceparts.ca/KenmoreModels.aspx?ModelNum=${input}&Page=${pageNumber}#PageContent_PagerTop
+    async function getParts(input, pageNumber) {
+        //let pageNumber = 1;
+        parts = await relatedPartsEasyParts(`https://cors-anywhere.herokuapp.com/https://www.easyapplianceparts.ca/KenmoreModels.aspx?ModelNum=${input}&Page=${pageNumber}#PageContent_PagerTop`);
+        console.log("parts: ", parts)
+        setPartsProducts(parts);
     }
 
     const inputHandler = (e) => {
         setModelInput(e.currentTarget.value);
     }
     const onClickHandler = (e) => {
-        getData(ModelInput);
-        getModels(ModelInput);
+        //getData(ModelInput);
+        getParts(ModelInput, 1);
     }
     const onResetHandler = (e) => {
         setModelInput("");
     }
-    const description = (url, price, parts) => {
-        return `Parts Number: ${parts}  ||  Price: ${price}  ||  Url: ${url}`
-    }
-    const desc = (brand, category) => {
-        return `Brand: ${brand}   ||  Category: ${category}`
+    const desc = (price) => {
+        return `Retail Price: ${price}`
     }
 
     return (
@@ -49,6 +41,9 @@ function ModelScraper() {
                 <input type="button" style={{ marginRight: "5px" }} onClick={onClickHandler} value="Search" />
                 <input type="button" onClick={onResetHandler} value="Reset" />
             </form>
+
+            <h2>Parts in Model {ModelInput}</h2>
+
             <List
                 itemLayout="vertical"
                 size="large"
@@ -56,11 +51,12 @@ function ModelScraper() {
                     onChange: page => {
                         console.log(page);
                     },
-                    pageSize: 3,
+                    pageSize: 15,
                 }}
                 dataSource={PartsProducts}
                 footer={
                     <div>
+                        {/* Here, Page selection should be located!! */}
                         Scraping Data with <b>{ModelInput}</b>
                     </div>
                 }
@@ -78,23 +74,10 @@ function ModelScraper() {
                         }
                     >
                         <List.Item.Meta
-                            title={<a href={item.sourceLink}>{item.name}</a>}
-                            description={description(item.url, item.price, item.number)}
+                            title={<a href={item.link}>{item.name}</a>}
+                            description={desc(item.price)}
                         />
-                        {item.related}
-                    </List.Item>
-                )}
-            />
-            <h2>Parts in this Model</h2>
-            <List
-                itemLayout="horizontal"
-                dataSource={ModelsProducts}
-                renderItem={item => (
-                    <List.Item>
-                        <List.Item.Meta
-                            title={<a href="https://ant.design">{item.number}</a>}
-                            description={desc(item.brand, item.description)}
-                        />
+                        {item.content}
                     </List.Item>
                 )}
             />

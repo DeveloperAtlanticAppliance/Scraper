@@ -31,7 +31,8 @@ function App() {
         <Tabs defaultActiveKey="2" items={items} />
       </Content>
       <Footer style={{ textAlign: 'center' }} >
-        Copyright <CopyrightCircleOutlined /> Atlantic Appliance Inc. All Rights Reserved.
+        <p>Copyright <CopyrightCircleOutlined /> Atlantic Appliance Inc. All Rights Reserved.</p>
+        If this app isn't working properly, please check this <a href='https://cors-anywhere.herokuapp.com/corsdemo'>website</a>
       </Footer>
     </Layout >
 

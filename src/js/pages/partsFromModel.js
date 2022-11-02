@@ -5,6 +5,7 @@ import { List, Pagination } from 'antd';
 function ModelScraper() {
 
     let parts, data = [];
+    let pages = 1;
 
     const [ModelInput, setModelInput] = useState("");
     const [PartsProducts, setPartsProducts] = useState([]);
@@ -15,8 +16,8 @@ function ModelScraper() {
         //let pageNumber = 1;
         data = await relatedPartsEasyParts(`https://cors-anywhere.herokuapp.com/https://www.easyapplianceparts.ca/KenmoreModels.aspx?ModelNum=${input}&Page=${pageNumber}#PageContent_PagerTop`);
         parts = data.results;
-        setPageNumbers(data.maxPage);
-        console.log("parts: ", parts)
+        pages = data.maxPage;
+        setPageNumbers(pages);
         setPartsProducts(parts);
     }
 
@@ -25,11 +26,16 @@ function ModelScraper() {
     }
     const onClickHandler = (e) => {
         //getData(ModelInput);
-        getParts(ModelInput, PageNumbers);
+        getParts(ModelInput, 1);
     }
     const onResetHandler = (e) => {
         setModelInput("");
     }
+
+    const pageHandler = (page) => {
+        getParts(ModelInput, page);
+    };
+
     const desc = (price) => {
         return `Retail Price: ${price}`
     }
@@ -51,6 +57,14 @@ function ModelScraper() {
                 dataSource={PartsProducts}
                 footer={
                     <div>
+                        <Pagination
+                            showSizeChanger={false}
+                            pageSize={15}
+                            defaultCurrent={1}
+                            total={PageNumbers}
+                            onChange={pageHandler}
+                        />
+
                         Scraping Data with <b>{ModelInput}</b>
                     </div>
                 }

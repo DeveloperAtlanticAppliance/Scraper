@@ -14,7 +14,7 @@ async function relatedPartsEasyParts(url) {
 
         let name, link, image, content = "";
         let price = 0;
-        let maxPage = ($("a[class='pageid active']").text()).slice(-1);;
+        let maxPage = $("div[class='summary']").text().split(' ').pop();
 
         $("div[class='seo-item js-ua-km-partrow']").each(function () {
             name = $("[id*='PageContent_rptPartsGrid_PartLink2_']", this).html();
@@ -39,7 +39,7 @@ async function relatedPartsEasyParts(url) {
         console.log({ results, maxPage });
         return ({
             results: results,
-            maxPage: maxPage
+            maxPage: maxPage,
         });
 
 

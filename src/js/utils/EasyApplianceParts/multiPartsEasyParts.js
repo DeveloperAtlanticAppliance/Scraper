@@ -3,7 +3,7 @@ import cheerio from 'cheerio';
 
 //https://www.easyapplianceparts.ca/PartInfo.aspx?inventory=12365300&SourceCode=3&SearchTerm=5304513033
 
-async function relatedModelEasyParts(url) {
+async function multiPartsEasyParts(url) {
     //exports.dataFromReliableParts = async url => {
     try {
         const { data } = await axios.get(url);
@@ -12,15 +12,14 @@ async function relatedModelEasyParts(url) {
         let results = [];
         let result = [];
 
-        let brands, numbers, descriptions, easyPartsNumber = "";
-
-        easyPartsNumber = ($("div[class='seo-price-wrap']").find("p[class='nf-value']").text().split('\n')[0].slice(3));
+        let brands, numbers, descriptions = "";
 
         $("[class^=model-cross-reference]").each(function () {
 
             brands = ($("[class^=model-cross-reference__list-content__model-row__brand]", this).html());
             numbers = ($("[class^=model-cross-reference__list-content__model-row__model]", this).html());
             descriptions = ($("[class^=model-cross-reference__list-content__model-row__desc]", this).html());
+
 
             if (brands) {
                 results.push({
@@ -30,15 +29,11 @@ async function relatedModelEasyParts(url) {
                     link: `https://www.easyapplianceparts.ca/KenmoreModels.aspx?ModelNum=${numbers}`
                 });
             }
+
             result = results.slice(2);
+
         });
 
-        if (result.length === 0) {
-            console.log("executed", result);
-            result.push({
-                easyPartsNumber: easyPartsNumber,
-            })
-        }
         return result;
 
 
@@ -48,4 +43,4 @@ async function relatedModelEasyParts(url) {
 }
 
 
-export default relatedModelEasyParts
+export default multiPartsEasyParts

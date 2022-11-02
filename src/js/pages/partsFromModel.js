@@ -70,7 +70,7 @@ function ModelScraper() {
                 }
                 renderItem={item => (
                     <List.Item
-                        key={item.name}
+                        key={item.easyPartsNumber}
                         extra={
                             <img
                                 height={200}

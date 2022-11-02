@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import dataFromReliableParts from "../utils/ReliableParts/reliableParts_Parts";
 import relatedModelEasyParts from '../utils/EasyApplianceParts/easyParts_Parts';
+import multiPartsEasyParts from '../utils/EasyApplianceParts/multiPartsEasyParts';
 import { List } from 'antd';
 
 function Scraper() {
@@ -21,7 +22,10 @@ function Scraper() {
         //models = await relatedModelEasyParts("https://www.easyapplianceparts.ca/PartInfo.aspx?inventory=12365300&SourceCode=3&SearchTerm=" + input);
         // https://www.easyapplianceparts.ca/Search.ashx?SearchTerm=${input}&SearchMethod=standard
         models = await relatedModelEasyParts(`https://cors-anywhere.herokuapp.com/https://www.easyapplianceparts.ca/Search.ashx?SearchTerm=${input}&SearchMethod=standard`);
-        console.log("model: ", models)
+        console.log("model: ", models);
+        if (models[0].easyPartsNumber) {
+            models = await multiPartsEasyParts(`https://cors-anywhere.herokuapp.com/https://www.easyapplianceparts.ca/PartInfo.aspx?inventory=${models[0].easyPartsNumber}`);
+        }
         setModels(models);
     }
 

@@ -12,7 +12,7 @@ async function relatedPartsEasyParts(url) {
         let results = [];
         let result = [];
 
-        let name, link, image, content = "";
+        let name, link, image, content, easyPartsNumber = "";
         let price = 0;
         let maxPage = $("div[class='summary']").text().split(' ').pop();
 
@@ -22,6 +22,7 @@ async function relatedPartsEasyParts(url) {
             image = $("img", this).prop("src");
             content = $("p[class='copy-text kenmore-desc-wrap']", this).text();
             price = $("div[class='seo-price-wrap']", this).find("strong").text().slice(1);
+            easyPartsNumber = $("div[class='seo-price-wrap']", this).find("p[class='nf-value']").text().split(' ')[0].slice(0, -1)
 
             console.log(result);
 
@@ -31,7 +32,8 @@ async function relatedPartsEasyParts(url) {
                     link: link,
                     image: image,
                     content: content,
-                    price: price
+                    price: price,
+                    easyPartsNumber: easyPartsNumber
                 })
             }
         });

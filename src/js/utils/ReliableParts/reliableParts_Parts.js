@@ -25,6 +25,8 @@ async function dataFromReliableParts(url) {
         //url = `https://cors-anywhere.herokuapp.com${url}`;
         const { data } = await axios.get(url);
 
+        console.log(data);
+
         const $ = cheerio.load(data);
         let Products = [];
 

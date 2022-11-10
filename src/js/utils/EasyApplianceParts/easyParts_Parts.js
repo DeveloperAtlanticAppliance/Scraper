@@ -1,8 +1,6 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 
-//https://www.easyapplianceparts.ca/PartInfo.aspx?inventory=12365300&SourceCode=3&SearchTerm=5304513033
-
 async function relatedModelEasyParts(url) {
     //exports.dataFromReliableParts = async url => {
     try {

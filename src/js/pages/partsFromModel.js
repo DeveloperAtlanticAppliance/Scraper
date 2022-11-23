@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import relatedPartsEasyParts from '../utils/EasyApplianceParts/easyParts_Model';
-import { List, Pagination } from 'antd';
+import { List, Pagination, Select } from 'antd';
 
 function ModelScraper() {
 
@@ -10,6 +10,8 @@ function ModelScraper() {
     const [ModelInput, setModelInput] = useState("");
     const [PartsProducts, setPartsProducts] = useState([]);
     const [PageNumbers, setPageNumbers] = useState(1);
+    const [TargetModelSites, setTargetModelSites] = useState("PartSelect");
+    //const [CurrentPages, setCurrentPages] = useState(1);
 
     // https://www.easyapplianceparts.ca/KenmoreModels.aspx?ModelNum=${input}&Page=${pageNumber}#PageContent_PagerTop
     async function getParts(input, pageNumber) {
@@ -39,6 +41,9 @@ function ModelScraper() {
     const desc = (price) => {
         return `Retail Price: ${price}`
     }
+    const onChangeModelSites = (value) => {
+        setTargetModelSites(value);
+    }
 
     return (
         <div>
@@ -50,6 +55,27 @@ function ModelScraper() {
             </form>
 
             <h2>Parts in Model {ModelInput}</h2>
+
+            <br />
+            <Select
+                showSearch
+                placeholder="Select a Site for the Parts Scraping"
+                optionFilterProp="children"
+                style={{ width: 250 }}
+                defaultValue="ReliableParts"
+                onChange={onChangeModelSites}
+                filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+                options={[
+                    {
+                        value: 'ReliableParts',
+                        label: 'reliableParts.ca',
+                    },
+                ]}
+            />
+            <br /><br />
+
 
             <List
                 itemLayout="vertical"

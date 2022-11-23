@@ -1,9 +1,8 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 
-const jsdom = require('jsdom');
-
 export async function partScrperbyParts(input) {
+
     try {
         let url = await readUrl(input);
 
@@ -50,6 +49,7 @@ export async function partScrperbyParts(input) {
 }
 
 export async function modelScraperbyParts(input) {
+
     try {
         let url = await readUrl(input);
         url = `https://cors-anywhere.herokuapp.com/${url}`;
@@ -96,17 +96,10 @@ async function readUrl(input) {
 
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
-        //const $ = data.JQuery;
 
         console.log(data)
 
         let scrapingNumber, currentUrl = "";
-
-        /*
-        const currentUrl = $("span[class='partdesc__part-title']").children("a").prop("href");
-        //const scrapingNumber = $("span[class='spd-orange']").text().slice(1);
-        const scrapingNumber = $("div[class='spinner']").html();
-        */
 
         $("div[class='container']").each(function () {
 

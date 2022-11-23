@@ -3,7 +3,8 @@ import dataFromReliableParts from "../utils/ReliableParts/reliableParts_Parts";
 import relatedModelEasyParts from '../utils/EasyApplianceParts/easyParts_Parts';
 import multiPartsEasyParts from '../utils/EasyApplianceParts/multiPartsEasyParts';
 import { partScrperbyParts, modelScraperbyParts } from '../utils/SearsPartsDirect/searsDirect_Parts';
-import { List, Select } from 'antd';
+import { partByPartsWithPartSelect, modelByPartsWithPartSelect } from '../utils/PartSelect/partsByPartSelect';
+import { List, Select, Button } from 'antd';
 
 function Scraper() {
 
@@ -14,17 +15,21 @@ function Scraper() {
     const [Products, setProducts] = useState([]);
     const [Models, setModels] = useState([]);
     const [TargetPartsSites, setTargetPartsSites] = useState("ReliableParts");
-    const [TargetModelSites, setTargetModelSites] = useState("SearsParts");
+    const [TargetModelSites, setTargetModelSites] = useState("PartSelect");
+    const [CurrentPages, setCurrentPages] = useState(1);
 
-    /*
-    useEffect = (() => {
 
+    useEffect(() => {
+        Input && getModels(Input, TargetModelSites);
+    }, [CurrentPages]);
+
+    useEffect(() => {
+        Input && getData(Input, TargetPartsSites);
     }, [TargetPartsSites]);
 
-    useEffect = (() => {
-
+    useEffect(() => {
+        Input && getModels(Input, TargetModelSites);
     }, [TargetModelSites]);
-    */
 
 
     async function getData(input, site) {
@@ -34,17 +39,12 @@ function Scraper() {
                 results = await dataFromReliableParts(`https://cors-anywhere.herokuapp.com/https://www.reliableparts.ca/search?q=${input}`);
                 break;
             case "PartSelect":
-                break;
-            case "SearsParts":
-                results = await partScrperbyParts(input);
-                break;
-            case "EasyParts":
+                results = await partByPartsWithPartSelect(input);
                 break;
             default:
                 console.log("Site selection is invalid");
                 break;
         }
-
         setProducts(results);
     }
 
@@ -52,14 +52,8 @@ function Scraper() {
 
         setTargetModelSites(site);
         switch (TargetModelSites) {
-            case "ReliableParts":
-                //results = await 
-                break;
             case "PartSelect":
-                break;
-            case "SearsParts":
-                models = await modelScraperbyParts(input);
-                console.log(models);
+                models = await modelByPartsWithPartSelect(input, CurrentPages);
                 break;
             case "EasyParts":
                 models = await relatedModelEasyParts(`https://cors-anywhere.herokuapp.com/https://www.easyapplianceparts.ca/Search.ashx?SearchTerm=${input}&SearchMethod=standard`);
@@ -97,6 +91,13 @@ function Scraper() {
     const onChangeModelSites = (value) => {
         setTargetModelSites(value);
     }
+    const onNextPage = () => {
+        setCurrentPages(CurrentPages + 1);
+    }
+    const onPreviousPage = () => {
+        setCurrentPages(CurrentPages - 1);
+    }
+
 
     return (
         <div>
@@ -129,14 +130,6 @@ function Scraper() {
                     {
                         value: 'PartSelect',
                         label: 'partselect.ca',
-                    },
-                    {
-                        value: 'SearsParts',
-                        label: 'searspartsdirect.com',
-                    },
-                    {
-                        value: 'EasyParts',
-                        label: 'easyapplianceparts.ca',
                     },
                 ]}
             />
@@ -190,23 +183,15 @@ function Scraper() {
                 placeholder="Select a Site for the Related Models Scraping"
                 optionFilterProp="children"
                 style={{ width: 250 }}
-                defaultValue="SearsParts"
+                defaultValue="PartSelect"
                 onChange={onChangeModelSites}
                 filterOption={(input, option) =>
                     (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                 }
                 options={[
                     {
-                        value: 'ReliableParts',
-                        label: 'reliableParts.ca',
-                    },
-                    {
                         value: 'PartSelect',
                         label: 'partselect.ca',
-                    },
-                    {
-                        value: 'SearsParts',
-                        label: 'searspartsdirect.com',
                     },
                     {
                         value: 'EasyParts',
@@ -219,6 +204,7 @@ function Scraper() {
             <List
                 itemLayout="horizontal"
                 dataSource={Models}
+                //loadMore={pageChangeHandler}
                 renderItem={item => (
                     <List.Item>
                         <List.Item.Meta
@@ -228,6 +214,18 @@ function Scraper() {
                     </List.Item>
                 )}
             />
+            <div
+                style={{
+                    textAlign: 'center',
+                    marginTop: 12,
+                    height: 32,
+                    lineHeight: '32px',
+                }}
+            >
+                {CurrentPages !== 1 && <Button style={{ width: 150 }} onClick={onPreviousPage}>Previous Page</Button>}
+
+                {Models.length === 30 && <Button style={{ width: 150 }} onClick={onNextPage}>Next Page</Button>}
+            </div>
         </div>
     )
 }
